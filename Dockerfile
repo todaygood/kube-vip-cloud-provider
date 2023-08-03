@@ -5,6 +5,8 @@ FROM golang:1.19 as builder
 COPY . /src/
 WORKDIR /src
 
+ENV GOPROXY="https://goproxy.cn,direct"
+
 RUN  --mount=type=cache,target=/root/.local/share/golang \
     --mount=type=cache,target=/go/pkg/mod \
     go mod download
@@ -17,7 +19,7 @@ RUN --mount=type=cache,target=/root/.cache/go-build \
 
 # Use distroless as minimal base image to package the manager binary
 # Refer to https://github.com/GoogleContainerTools/distroless for more details
-FROM gcr.io/distroless/static:nonroot
+FROM gcr.m.daocloud.io/distroless/static:nonroot
 COPY --from=builder /src/kube-vip-cloud-provider /
 USER nonroot:nonroot
 
